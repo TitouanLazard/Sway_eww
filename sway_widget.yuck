@@ -1,3 +1,30 @@
+
+
+
+(defwidget wp [toggler name output ?transition ?duration]
+	   (revealer :reveal toggler
+	   :transition {transition ?: "slideright"}
+          :duration {duration ?: "300ms"}
+	  (button :class {wp-focused==name ? "wp-focused" : (output==name ? "wp-visible" : "wp" )} :onclick "swaymsg workspace ${name}" name )
+	  )
+)
+
+(defwidget workspaces  [output wp1 wp2 wp3 wp4 wp5 wp6 wp7 wp8 wp9 wp10] 
+	   ( box :space-evenly "false"
+	   (wp :toggler wp1 :name wp1-name :output output)
+	   (wp :toggler wp2 :name wp2-name :output output)
+	   (wp :toggler wp3 :name wp3-name :output output)
+	   (wp :toggler wp4 :name wp4-name :output output)
+	   (wp :toggler wp5 :name wp5-name :output output)
+	   (wp :toggler wp6 :name wp6-name :output output)
+	   (wp :toggler wp7 :name wp7-name :output output)
+	   (wp :toggler wp8 :name wp8-name :output output)
+	   (wp :toggler wp9 :name wp9-name :output output)
+	   (wp :toggler wp10 :name wp10-name :output output)
+	   )
+)
+
+
 (defwidget left_eDP-1 []
 	   (box :halign "start" :space-evenly false
 	   (menu)
