@@ -7,6 +7,8 @@ import json
 import shutil
 import struct
 
+MAX_LENGTH_APPNAME=64
+
 verbose = False
 sock_path = "./sock"
 
@@ -15,6 +17,7 @@ subscribe_type = 0x02
 get_outputs = 0x03
 get_workspaces = 0x01
 header_length = 14
+eww = "/home/titouan/Working_Dir/eww/target/release/eww"
 
 def log(s):
     if verbose:
@@ -26,23 +29,29 @@ def error_exit(s):
     sys.exit()
 
 
-
-
-class Workspace():
-    def __init__(self, wp_json, daemon):
-        self.num = wp_json["num"]
-        self.daemon = daemon
-        self.output = wp_json["output"]
-        self.daemon.outputs[self.output] = self.num
-        
-        
-    def __repr__(self):
-        return str(self.num) + '@' + self.output + (("-focused") if self.daemon.focused_wp==self.num else "-not_focused") + (" - VISIBLE" if self.daemon.outputs[self.output] == self.num else " - NOT VISIBLE" )
-
-
-    
 class Daemon():
 
+   
+    def update_varname(self, current_name):
+        subprocess.run([eww, "update", f"sway_currentapp={current_name}"])
+
+    def show_workspace(self, output, num):
+        subprocess.run([eww, "update", f"{output}-{num}=true"])
+
+    def hide_workspace(self, output, num):
+        subprocess.run([eww, "update", f"{output}-{num}=false"])
+
+    def set_focus_workspace(self, num):
+        subprocess.run([eww, "update", f"wp-focused={num}"])
+
+    def set_visible_workspace(self, output, num):
+        subprocess.run([eww, "update", f"wp-{output}-visible={num}"])
+
+    def set_visible_bar(self, output):
+        subprocess.run([eww, "open", f"main_bar_{output}"])
+
+    
+        
     def update(self, data):        
         i = json.loads(data.decode())
         if "change" in i:
@@ -50,11 +59,15 @@ class Daemon():
             
                 if "container" in i:
                     # change focused window
-                    self.current_name = i["container"]["name"]
+                    n = i["container"]["name"]
+                    if len(n) > MAX_LENGTH_APPNAME:
+                        n = n[:MAX_LENGTH_APPNAME]+"..."
+                    self.update_varname(n)
                 elif "current" in i:
-                    # change focused workspace
-                    self.focused_wp = int(i["current"]["name"])
-                    self.outputs[i["current"]["output"]] = int(i["current"]["name"])
+                    self.set_focus_workspace(i["current"]["name"])
+                    if i["current"]["name"] !=  self.outputs[i["current"]["output"]]:
+                        self.outputs[i["current"]["output"]] = i["current"]["name"]
+                        self.set_visible_workspace(i["current"]["output"], i["current"]["name"])
                 else:
                     print(json.dumps(i, indent=4))
             elif i["change"] == "move":
@@ -62,13 +75,24 @@ class Daemon():
                 print(json.dumps(i, indent=4))
             elif i["change"] == "init":
                 # Creating a new workspace
-                self.workspaces.append(Workspace(i["current"], self))
+                if (i["current"]["output"] not in self.outputs):
+                   self.outputs[i["current"]["output"]] = i["current"]["name"]
+                   self.set_visible_bar(i["current"]["output"])
+                self.show_workspace(i["current"]["output"],i["current"]["num"])
+
             elif i["change"] == "empty":
-                # Closing an empty workspace
-                for wp in range(len(self.workspaces)):
-                    if self.workspaces[wp].num == i["current"]["num"]:
-                        self.workspaces.remove(self.workspaces[wp])
-                    
+                self.hide_workspace(i["current"]["output"],i["current"]["num"])
+            elif i["change"] == "move":
+                if "old" in i: # monitor_unplugged
+                    self.initial_state()
+            elif i["change"] == "title":
+                n = i["container"]["name"]
+                if len(n) > MAX_LENGTH_APPNAME:
+                    n = n[:MAX_LENGTH_APPNAME]+"..."
+                self.update_varname(n)
+
+            elif i["change"] == "urgent":
+                pass
             else:
                 print(i["change"])
             
@@ -103,30 +127,29 @@ class Daemon():
         size, t = struct.unpack_from("<II", data, offset=len(ipc_magic))
         data = self.sock.recv(size)
         js = json.loads(data.decode())
-        self.outputs = {o['name']:int(o['current_workspace']) for o in js}
-
+        print(json.dumps(js,indent=4))
+        self.outputs = {o['name']:int(o['current_workspace']) if o['current_workspace'] else "11" for o in js}
+        for i in self.outputs:
+            self.set_visible_bar(i)
 
         header = ipc_magic.encode()
         mess_type = struct.pack("<I", get_workspaces)
-
         buf = ipc_magic.encode() + struct.pack("<I",0) + mess_type
         self.sock.send(buf)
         data = self.sock.recv(header_length) 
         size, t = struct.unpack_from("<II", data, offset=len(ipc_magic))
         data = self.sock.recv(size)
         js = json.loads(data.decode())
-        
+
+        index = 0
+       
         for wp in js:
-            print(wp)
-            self.workspaces.append(Workspace(wp,self))
-            if(wp["focused"]):
-                self.focused_wp = wp['num']
-            
+            self.show_workspace(wp["output"],wp['num'])
             
     def __init__(self, sock_path=None):
         self.exit = False
         self.workspaces = []
-        self.outputs = []
+        self.outputs = {}
         if sock_path == None:
             sock_path = os.getenv("SWAYSOCK")
         if sock_path == None:
@@ -134,9 +157,10 @@ class Daemon():
         self.sock_path = sock_path
         self.sock = socket.socket(socket.AF_UNIX, socket.SOCK_STREAM)
         self.sock.connect(sock_path)
-        self.init_sock_subscription()
+
         self.initial_state()
-            
+        self.init_sock_subscription()
+        #print(self.outputs)
     
 if __name__ == "__main__":
     sock_path = None
