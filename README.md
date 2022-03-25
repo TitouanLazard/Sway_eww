@@ -26,6 +26,8 @@ The [MONITOR]-[WP\_Number] variables are used as togglers for wp widgets.
 1 workspaces widget is instaciated per bar. 
 A bar is displayable on each monitor.
 
+#### Screenshot :
+![A screenshot](screenshot_example.png "A screenshot of what you can get")
 
 ## Futur work
 Plenty of stuf still need to be done:
