@@ -1,0 +1,99 @@
+(defwidget left_eDP-1 []
+	   (box :halign "start" :space-evenly false
+	   (menu)
+	   (workspaces :wp1 eDP-1-1 :wp2 eDP-1-2 :wp3 eDP-1-3 :wp4 eDP-1-4 :wp5 eDP-1-5 :wp6 eDP-1-6 :wp7 eDP-1-7 :wp8 eDP-1-8 :wp9 eDP-1-9 :wp10 eDP-1-10 :output wp-eDP-1-visible :halign "left")
+	   )
+)
+
+
+(defwidget left_DP-2 []
+	   (box :halign "start" :space-evenly false
+	   (label :class "menu" :text "")
+	   (workspaces :wp1 DP-2-1 :wp2 DP-2-2 :wp3 DP-2-3 :wp4 DP-2-4 :wp5 DP-2-5 :wp6 DP-2-6 :wp7 DP-2-7 :wp8 DP-2-8 :wp9 DP-2-9 :wp10 DP-2-10 :output wp-DP-2-visible :halign "left")
+	   )
+)
+
+(defwidget left_DP-4 []
+	   (box :halign "start" :space-evenly false
+	   (label :class "menu" :text "")
+	   (workspaces :wp1 DP-4-1 :wp2 DP-4-2 :wp3 DP-4-3 :wp4 DP-4-4 :wp5 DP-4-5 :wp6 DP-4-6 :wp7 DP-4-7 :wp8 DP-4-8 :wp9 DP-4-9 :wp10 DP-4-10 :output wp-DP-4-visible :halign "left")
+	   )
+)
+
+(defwidget left_DP-5 []
+	   (box :halign "start" :space-evenly false
+	   (label :class "menu" :text "")
+	   (workspaces :wp1 DP-5-1 :wp2 DP-5-2 :wp3 DP-5-3 :wp4 DP-5-4 :wp5 DP-5-5 :wp6 DP-5-6 :wp7 DP-5-7 :wp8 DP-5-8 :wp9 DP-5-9 :wp10 DP-5-10 :output wp-DP-5-visible :halign "left")
+	   )
+)
+
+
+(defvar eDP-1-1 false)
+(defvar eDP-1-2 false)
+(defvar eDP-1-3 false)
+(defvar eDP-1-4 false)
+(defvar eDP-1-5 false)
+(defvar eDP-1-6 false)
+(defvar eDP-1-7 false)
+(defvar eDP-1-8 false)
+(defvar eDP-1-9 false)
+(defvar eDP-1-10 false)
+
+(defvar DP-2-1 false)
+(defvar DP-2-2 false)
+(defvar DP-2-3 false)
+(defvar DP-2-4 false)
+(defvar DP-2-5 false)
+(defvar DP-2-6 false)
+(defvar DP-2-7 false)
+(defvar DP-2-8 false)
+(defvar DP-2-9 false)
+(defvar DP-2-10 false)
+
+(defvar DP-4-1 false)
+(defvar DP-4-2 false)
+(defvar DP-4-3 false)
+(defvar DP-4-4 false)
+(defvar DP-4-5 false)
+(defvar DP-4-6 false)
+(defvar DP-4-7 false)
+(defvar DP-4-8 false)
+(defvar DP-4-9 false)
+(defvar DP-4-10 false)
+
+(defvar DP-5-1 false)
+(defvar DP-5-2 false)
+(defvar DP-5-3 false)
+(defvar DP-5-4 false)
+(defvar DP-5-5 false)
+(defvar DP-5-6 false)
+(defvar DP-5-7 false)
+(defvar DP-5-8 false)
+(defvar DP-5-9 false)
+(defvar DP-5-10 false)
+
+
+(defvar wp-eDP-1-visible "")
+(defvar wp-DP-2-visible "")
+(defvar wp-DP-4-visible "")
+(defvar wp-DP-5-visible "")
+
+
+
+(defvar wp-focused "")
+
+
+(defvar wp1-name "1" )
+(defvar wp2-name "2" )
+(defvar wp3-name "3" )
+(defvar wp4-name "4" )
+(defvar wp5-name "5" )
+(defvar wp6-name "6" )
+(defvar wp7-name "7" )
+(defvar wp8-name "8" )
+(defvar wp9-name "9" )
+(defvar wp10-name "10" )
+
+
+(defvar sway_currentapp "")
+
