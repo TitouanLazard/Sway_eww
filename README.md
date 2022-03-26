@@ -26,6 +26,8 @@ The [MONITOR]-[WP\_Number] variables are used as togglers for wp widgets.
 1 workspaces widget is instaciated per bar. 
 A bar is displayable on each monitor.
 
+When the script starts, it calls eww in order to open bar named __main\_bar\_[MONITOR_NAME]__
+
 #### Screenshot :
 ![A screenshot](screenshot_example.png "A screenshot of what you can get")
 
