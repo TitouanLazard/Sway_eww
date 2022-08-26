@@ -31,7 +31,7 @@ When the script starts, it calls eww in order to open bar named __main\_bar\_[MO
 #### Screenshot :
 ![A screenshot](screenshot_example.png "A screenshot of what you can get")
 
-## Futur work
+## Future work
 Plenty of stuf still need to be done:
 - Using eww ipc mechanism directly istead of popping a new eww process every time. That's urgent.
 - Having a better way to handle workspaces names/numbers, to support workspaces with different names than 0-10.
